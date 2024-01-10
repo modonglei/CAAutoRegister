@@ -20,6 +20,8 @@ def createBrowser(host, port, proxyUserName, proxyPassword):  # 创建或者更�
         'workbench':'disable',#浏览器窗口工作台页面，localserver 或 disable，默认localserver，不需要显示工作台时，设置disable
         'proxyMethod': 2,  # 代理方式 2自定义 3 提取IP
         # 代理类型  ['noproxy', 'http', 'https', 'socks5', 'ssh']
+        'disableTranslatePopup':'true',#禁止谷歌翻译弹出
+        'isIpCreateDisplayLanguage':'true',#是否基于ip生成对应浏览器界面
         'proxyType': 'socks5',
         'host': host,  # 代理主机
         'port': port,  # 代理端口
@@ -39,10 +41,41 @@ def createBrowser(host, port, proxyUserName, proxyPassword):  # 创建或者更�
     browserId = res['data']['id']
     log.info(f'browserId:{browserId}')
     return browserId
+def createLessBrowser():  # 创建或者更新窗口，指纹参数 browserFingerPrint 如没有特定需求，只需要指定下内核即可，如果需要更详细的参数，请参考文档
+    json_data = {
+        'name': 'google',  # 窗口名称
+        'remark': '',  # 备注
+        'platform':'https://www.canadiandiamondsclassaction.ca/en/claim/consumer',
+        'workbench':'disable',#浏览器窗口工作台页面，localserver 或 disable，默认localserver，不需要显示工作台时，设置disable
+        'proxyMethod': 2,  # 代理方式 2自定义 3 提取IP
+        # 代理类型  ['noproxy', 'http', 'https', 'socks5', 'ssh']
+        'disableTranslatePopup':'true',#禁止谷歌翻译弹出
+        'isIpCreateDisplayLanguage':'true',#是否基于ip生成对应浏览器界面
+        'proxyType': 'noproxy',
+        # 'host': host,  # 代理主机
+        # 'port': port,  # 代理端口
+        # 'proxyUserName': proxyUserName,  # 代理账号
+        # 'proxyPassword': proxyPassword,
+        "browserFingerPrint": {  # 指纹对象
+            'isIpCreateLanguage': 'false',
+            'languages': 'en-US',
+            'isIpCreateTimeZone': 'true', #基于IP生成对应的时区
+            'webRTC': '2', # webrtc 0替换 | 1允许 | 2禁止
+            'isIpCreatePosition': 'true', # 是否基于IP生成对应的地理位置
+            'version': '109',   #浏览器版本，不填则随机
+            'coreVersion': '112'  # 内核版本 112 | 104，建议使用112，注意，win7/win8/winserver 2012 已经不支持112内核了，无法打开
+        }
+    }
+    res = requests.post(f"{url}/browser/update",
+                        data=json.dumps(json_data), headers=headers).json()
+    browserId = res['data']['id']
+    log.info(f'browserId:{browserId}')
+    return browserId
 
 def createStaticBrowser(dynamicIpUrl,dynamicIpChannel):  # 创建或者更新窗口，指纹参数 browserFingerPrint 如没有特定需求，只需要指定下内核即可，如果需要更详细的参数，请参考文档
     json_data = {
         'name': 'google',  # 窗口名称
+        'platform': 'https://www.canadiandiamondsclassaction.ca/en/claim/consumer',
         'remark': '',  # 备注
         'proxyMethod': 3,  # 代理方式 2自定义 3 提取IP
         # 代理类型  ['noproxy', 'http', 'https', 'socks5', 'ssh']
@@ -157,6 +190,8 @@ def ports():  # 获取浏览器窗口详情
     res = requests.post(f"{url}/browser/ports",
                         data=json.dumps(json_data), headers=headers).json()
     print(res)
+    return res
+
 if __name__ == '__main__':
     # RobotWindowbounds(1)
     # RobotWindowbounds(2)
@@ -165,11 +200,12 @@ if __name__ == '__main__':
     # RobotWindowbounds(5)
     # RobotWindowbounds(6)
     # RobotWindowbounds(7)
-    # id = '2a7f38ceb67c448d8f3fe27ea559d3e2'
-    # id1 = '306c8b3be3c346fbbe5c735a29c862b5'
-    # id2 = 'ea643ddddd674586a99706df4db94145'
-    # closeBrowser(id)
-    # deleteBrowser(id)
+    id = list(ports()["data"].keys())[0]
+    id1 = '485d60f7b7374808a5951524207efc22'
+    # id2 = 'c30416718d444076bc02ed1c11afaa89'
+    # id3 = 'b869b02861854d08a8d7c110df25d08b'
+    closeBrowser(id)
+    deleteBrowser(id)
     # closeBrowser(id1)
     # deleteBrowser(id1)
     # closeBrowser(id2)
@@ -178,3 +214,4 @@ if __name__ == '__main__':
     # res1 = detail(id1)
     # RobotWindowbounds([7])
     ports()
+    # detail(id)

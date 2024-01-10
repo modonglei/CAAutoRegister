@@ -13,8 +13,14 @@ def runAutoTask():
 if __name__ == '__main__':
     multiprocessing.freeze_support()
     pool = multiprocessing.Pool(processes=6)
-    for i in range(4):
+    for i in range(1):
         handler = pool.apply_async(runAutoTask)
-        time.sleep(5)
+        time.sleep(1)
     pool.close()
     pool.join()
+
+
+
+
+
+
